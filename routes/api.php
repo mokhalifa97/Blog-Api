@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticlesController;
+use App\Models\Articles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('articles')->group(function(){
     Route::get('/',[ArticlesController::class,'index']);
-
     Route::get('/show/{id}',[ArticlesController::class,'show']);
+    Route::post('/create',[ArticlesController::class,'create']);
+    Route::post('/delete',[ArticlesController::class,'delete']);
+    Route::post('/update',[ArticlesController::class,'update']);
 });
