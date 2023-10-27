@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\AuthController;
 use App\Models\Articles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +27,11 @@ Route::prefix('articles')->group(function(){
     Route::post('/create',[ArticlesController::class,'create']);
     Route::post('/delete',[ArticlesController::class,'delete']);
     Route::post('/update',[ArticlesController::class,'update']);
+});
+
+Route::controller(AuthController::class)->group(function(){
+    Route::post('login','login');
+    Route::post('register', 'register');
+    Route::post('logout', 'logout');
+    Route::post('refresh', 'refresh');
 });

@@ -3,38 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Resources\ArticlesResource;
+use App\Http\Traits\ApiArticleResponse;
 use App\Models\Articles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ArticlesController extends Controller
 {
+
+    use ApiArticleResponse;
+
+
     public function index(){
-        $articles=Articles::all();
-        $data=[
-            'msg' => 'All Data Return',
-            'status' => 200,
-            'data' => $articles
-        ];
-        return response()->json($data);
+        $data= ArticlesResource::collection(Articles::all());
+        $msg= 'RETURN ALL RECORDS';
+        $status=200;
+
+        return $this->ApiResponse($data,$msg,$status);
     }
 
     public function show($id){
-        $article=Articles::find($id);
-        if($article){
-            $data=[
-                'msg' => 'Return one record',
-                'status' => 200,
-                'data' => $article
-            ];
-            return response()->json($data);
+        $data= Articles::find($id);
+        if($data){
+            $msg= 'Return one record';
+            $status=200;
+            return $this->ApiResponse(new ArticlesResource($data),$msg,$status);
         }else{
-            $data=[
-                'msg' => 'no such ID exist!',
-                'status' => 201,
-                'data' => null
-            ];
-            return response()->json($data);
+            $data=null;
+            $msg= 'no such ID exist!';
+            $status=201;
+            return $this->ApiResponse($data,$msg,$status);
         }
     }
 
@@ -50,12 +48,11 @@ class ArticlesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $data=[
-                'msg' => 'please add data correctly',
-                'status' => 203,
-                'data' => $validator->errors()
-            ];
-            return response()->json($data);
+                $msg = 'please add data correctly';
+                $status = 203;
+                $data = $validator->errors();
+
+            return $this->ApiResponse($data,$msg,$status);
         }
 
             $newCreate=Articles::create([
@@ -67,25 +64,20 @@ class ArticlesController extends Controller
             'status'=> $request->status
             ]);
 
-            $data=[
-                "msg"=> "CREATED NEW RECORD SUCCESSFULLY!!",
-                "status"=> 201,
-                "data" => new ArticlesResource($newCreate)
-            ];
-            return response()->json($data);
-        
+            $msg = 'CREATED NEW RECORD SUCCESSFULLY!!';
+                $status = 201;
+                $data = new ArticlesResource($newCreate);
+                
+            return $this->ApiResponse($data,$msg,$status);
+
     }
 
     public function delete(Request $request){
         $id= $request->id;
         $delete=Articles::find($id);
         $delete->delete();
-        $data=[
-            "msg"=> "deleted successfully !",
-            "status"=> 205,
-            "data" => null
-        ];
-        return response()->json($data);
+
+        return $this->ApiResponse(null,'deleted successfully !',205);
     }
 
     public function update(Request $request){
@@ -102,12 +94,7 @@ class ArticlesController extends Controller
         ]);
 
         if($validator->fails()){
-            $data=[
-                'msg' => 'please add data correctly',
-                'status' => 203,
-                'data' => $validator->errors()
-            ];
-            return response()->json($data);
+            return $this->ApiResponse($validator->errors(),'please enter data correctly',203);
         }
 
         $article->update([
@@ -119,12 +106,7 @@ class ArticlesController extends Controller
             'status'=> $request->status
         ]);
 
-        $data=[
-            "msg"=> "UPDATED successfully !!",
-            "status"=> 207,
-            "data" => new ArticlesResource($article)
-        ];
-        return response()->json($data);
+        return $this->ApiResponse(new ArticlesResource($article),'UPDATED successfully !!',207);
     
     }
 }
