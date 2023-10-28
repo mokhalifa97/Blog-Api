@@ -21,7 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('articles')->group(function(){
+
+Route::group(['prefix'=> 'articles', 'middleware'=> ['articleCheck']],function(){
     Route::get('/',[ArticlesController::class,'index']);
     Route::get('/show/{id}',[ArticlesController::class,'show']);
     Route::post('/create',[ArticlesController::class,'create']);

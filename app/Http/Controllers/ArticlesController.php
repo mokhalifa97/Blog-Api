@@ -14,6 +14,8 @@ class ArticlesController extends Controller
     use ApiArticleResponse;
 
 
+
+
     public function index(){
         $data= ArticlesResource::collection(Articles::all());
         $msg= 'RETURN ALL RECORDS';
