@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AuthorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,13 @@ Route::group(['prefix'=> 'articles' , 'middleware' => 'articleCheck'],function()
     Route::post('/create',[ArticlesController::class,'create']);
     Route::post('/delete',[ArticlesController::class,'delete']);
     Route::post('/update',[ArticlesController::class,'update']);
+});
+
+// all authors table api's
+Route::group(['prefix'=>'authors'],function(){
+    Route::get('/',[AuthorController::class,'index']);
+    Route::get('/show/{id}',[AuthorController::class,'show']);
+    Route::post('/delete',[AuthorController::class,'delete']);
 });
 
 
