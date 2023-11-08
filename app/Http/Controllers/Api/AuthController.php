@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
 
-    public function test(){
-        return 'welcome';
-    }
-    
     public function register(Request $request){
         try{
             //Validated
@@ -72,7 +68,16 @@ class AuthController extends Controller
                     'error' => $validateUser->errors()
                 ],401);
             }
+
             $user=User::where('email',$request->email)->first();
+
+            //check if password and email correct
+            if (!$user || !Hash::check('password', $user->password) ) {
+                return response([
+                    'message' => 'incorrect username or password'
+                ], 401);
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
